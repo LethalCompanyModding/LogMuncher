@@ -80,6 +80,7 @@ public class TheLogMuncher()
 
         //Get the base value of this log
         value = level.GetLogWeight();
+        bool modsRun = false;
 
         //Run all circumstance modifiers
         foreach (var item in Modifiers)
@@ -88,6 +89,8 @@ public class TheLogMuncher()
 
             if (Matches.Success)
             {
+                modsRun = true;
+
                 switch (item.Type)
                 {
                     case CircumstanceType.Additive:
@@ -98,6 +101,12 @@ public class TheLogMuncher()
                         break;
                 }
             }
+        }
+
+        if (!modsRun)
+        {
+            //No mods were run at all for this line so its boring
+            value -= 3f;
         }
 
         var tempHash = contents.GetHashCode();
