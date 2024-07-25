@@ -39,8 +39,15 @@ public class TheLogMuncher()
             -15f
         ),
 
-        //
-        //Do not care about BepinEx wrong version warnings
+        //Elevate logs that talk about null refs without mentioning an exception
+        new(
+            new("""Object reference not set.*object""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
+            CircumstanceType.Additive,
+            4f
+        ),
+
+        //Elevate logs that fail to open files due to sharing violations
+        //TODO: maybe make this match on more general failed to open file statements
         new(
             new("""sharing violation""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
             CircumstanceType.Additive,
