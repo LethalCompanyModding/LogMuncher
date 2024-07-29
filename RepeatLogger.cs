@@ -1,6 +1,6 @@
 namespace LogMuncher;
 
-public static class RepeatLogger
+internal static class RepeatLogger
 {
     private static int Repeats = 0;
     private static int LastInHash = 0;
