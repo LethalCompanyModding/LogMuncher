@@ -10,13 +10,10 @@ internal class Program
     static void FirstChanceHandler(object? source, FirstChanceExceptionEventArgs e)
     {
 
-        if (lastEvent != null)
+        if (lastEvent != null && lastEvent == e.Exception)
         {
-            if (lastEvent == e.Exception)
-            {
-                RepeatLogger.WriteLogLine("Skipping a previously handled, unwinding exception");
-                return;
-            }
+            RepeatLogger.WriteLogLine("Skipping a previously handled, unwinding exception");
+            return;
         }
 
         lastEvent = e.Exception;
