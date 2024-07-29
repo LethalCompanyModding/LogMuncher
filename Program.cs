@@ -142,9 +142,10 @@ internal class Program
                 addedLines = 0;
             }
         }
-        catch (Exception e) when (e is IOException || e is OutOfMemoryException)
+        catch (Exception e)
         {
             RepeatLogger.WriteLogLine("The file could not be read because:");
+            RepeatLogger.WriteLogLine($"  {e.GetType()}");
             RepeatLogger.WriteLogLine($"  {e.Message}");
             return;
         }
