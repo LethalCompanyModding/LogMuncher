@@ -1,8 +1,6 @@
-using System.Diagnostics;
-
 namespace LogMuncher.Muncher;
 
-public class LineData(int Line, LogLevel Level, string Source, string Contents, float Weight)
+internal class LineData(int Line, LogLevel Level, string Source, string Contents, float Weight)
 {
     public readonly int Line = Line;
     public readonly LogLevel Level = Level;

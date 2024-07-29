@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace LogMuncher.Muncher;
 
-public class TheLogMuncher()
+internal class TheLogMuncher()
 {
 
     //FAKE

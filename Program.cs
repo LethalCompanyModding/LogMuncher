@@ -1,8 +1,9 @@
 ﻿using System.Runtime.ExceptionServices;
-using System.Reflection;
 using LogMuncher.Muncher;
 
+[assembly: System.Resources.NeutralResourcesLanguageAttribute("en")]
 namespace LogMuncher;
+
 internal class Program
 {
 
@@ -48,7 +49,13 @@ internal class Program
         }
     }
 
-    static void Main(string[] args)
+    /// <summary>
+    /// LogMuncher written by Robyn
+    /// </summary>
+    /// <param name="i">File name to read input from</param>
+    /// <param name="o">File name to output to</param>
+    /// <param name="con">Flag to show output to the console too</param>
+    static void Main(string o, bool con, string i = "LogOutput.log")
     {
 
         //Become exception royalty
@@ -56,45 +63,18 @@ internal class Program
         //AppDomain.CurrentDomain.FirstChanceException += FirstChanceHandler;
 
         //default filename
-        string input = "LogOutput.log";
+        string input = i;
         string window = string.Empty;
 
-        if (args.Length > 0)
+        //Check if output is given
+        if (o is not null)
         {
-            for (int i = 0; i < args.Length; i++)
-            {
-                switch (args[i])
-                {
-                    case "-i":
-                        if (args.Length >= i + 1)
-                        {
-                            input = args[i + 1];
-                            i++;
-                        }
-                        break;
-                    case "-o":
-                        if (args.Length >= i + 1)
-                        {
-                            output = args[i + 1];
-                            DoOutput = true;
-                            i++;
-                        }
-                        break;
-                    case "--con":
-                        DoConsole = true;
-                        break;
-                    default:
-                    case "--help":
-                    case "-h":
-                        //Display help screen and exit
-                        Console.WriteLine();
-                        Console.WriteLine("Log Muncher by Robyn");
-                        Console.WriteLine($"Version: {typeof(Program).Assembly.GetName().Version}");
-                        Console.WriteLine("\nValid switches:\n  -i <input file>\n  -o <output file>\n  --con Also output results to console\n");
-                        return;
-                }
-            }
+            output = o;
+            DoOutput = true;
         }
+
+        //check if we are writing to the console
+        DoConsole = con;
 
         TheLogMuncher muncher = new();
         List<LineData> Lines = [];

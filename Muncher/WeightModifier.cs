@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace LogMuncher.Muncher;
 
-public class WeightModifier(Regex Regex, CircumstanceType Type, float Value)
+internal class WeightModifier(Regex Regex, CircumstanceType Type, float Value)
 {
     public readonly Regex Regex = Regex;
     public readonly CircumstanceType Type = Type;

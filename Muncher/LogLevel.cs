@@ -1,6 +1,6 @@
 namespace LogMuncher.Muncher;
 
-public class LogLevel(string value)
+internal class LogLevel(string value)
 {
     readonly string _value = value;
 
