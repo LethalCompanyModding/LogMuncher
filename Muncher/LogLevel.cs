@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace LogMuncher.Muncher;
 
 internal class LogLevel(string value)
@@ -16,8 +18,7 @@ internal class LogLevel(string value)
 
     public float GetLogWeight()
     {
-        //skipcq: CS-R1018
-        return _value.ToLower() switch
+        return _value.ToLowerInvariant() switch
         {
             "message" => 0f,
             "info" => 0f,
