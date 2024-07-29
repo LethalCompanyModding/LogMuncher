@@ -54,17 +54,17 @@ internal class Program
     /// </summary>
     /// <param name="i">File name to read input from</param>
     /// <param name="o">File name to output to</param>
+    /// <param name="f">Folder name to read in</param>
     /// <param name="con">Flag to show output to the console too</param>
-    static void Main(string o, bool con, string i = "LogOutput.log")
+    static void Main(string o, bool con, string f, string i = "LogOutput.log")
     {
 
         //Become exception royalty
         //This works but its going to be more useful when Muncher becomes a plugin
         //AppDomain.CurrentDomain.FirstChanceException += FirstChanceHandler;
 
-        //default filename
-        string input = i;
-        string window = string.Empty;
+        //check if we are writing to the console
+        DoConsole = con;
 
         //Check if output is given
         if (o is not null)
@@ -73,8 +73,40 @@ internal class Program
             DoOutput = true;
         }
 
-        //check if we are writing to the console
-        DoConsole = con;
+        if (f is not null)
+        {
+            RepeatLogger.WriteLogLine("Starting in folder mode");
+            DoOutput = true;
+            string[] files = Directory.GetFiles(f, "*.log");
+
+            foreach (var item in files)
+            {
+                //create the output file
+                string basedir = Path.Combine(f, "munched");
+
+                if (!Directory.Exists(basedir))
+                {
+                    Directory.CreateDirectory(basedir);
+                }
+
+                output = $"{Path.Combine(basedir, Path.GetFileNameWithoutExtension(item))}.txt";
+
+                if (File.Exists(output))
+                    File.Delete(output);
+
+                MunchSingleLog(item);
+            }
+        }
+        else
+        {
+            RepeatLogger.WriteLogLine("Starting in single file mode");
+            MunchSingleLog(i);
+        }
+    }
+
+    public static void MunchSingleLog(string input)
+    {
+        string window = string.Empty;
 
         TheLogMuncher muncher = new();
         List<LineData> Lines = [];
@@ -117,7 +149,8 @@ internal class Program
             return;
         }
 
-        WriteData("\n----------------------------------------------------------------------------------");
+        WriteData("----------------------------------------------------------------------------------");
+        WriteData($"Finished Sorting: {input}");
         WriteData($"Sorted {lineNo} total lines into {Lines.Count} potential issues");
         WriteData("----------------------------------------------------------------------------------\n");
 
@@ -132,6 +165,7 @@ internal class Program
         {
             AppendFile?.Flush();
             AppendFile?.Close();
+            AppendFile = null;
         }
     }
 }
