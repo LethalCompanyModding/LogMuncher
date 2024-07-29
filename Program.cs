@@ -69,6 +69,7 @@ internal class Program
                         if (args.Length >= i + 1)
                         {
                             input = args[i + 1];
+                            i++;
                         }
                         break;
                     case "-o":
@@ -76,20 +77,21 @@ internal class Program
                         {
                             output = args[i + 1];
                             DoOutput = true;
+                            i++;
                         }
                         break;
                     case "--con":
                         DoConsole = true;
                         break;
+                    default:
                     case "--help":
                     case "-h":
                         //Display help screen and exit
                         Console.WriteLine();
                         Console.WriteLine("Log Muncher by Robyn");
-                        Console.WriteLine($"Version: {Assembly.GetExecutingAssembly().GetName().Version}");
+                        Console.WriteLine($"Version: {typeof(Program).Assembly.GetName().Version}");
                         Console.WriteLine("\nValid switches:\n  -i <input file>\n  -o <output file>\n  --con Also output results to console\n");
-                        Environment.Exit(0);
-                        break;
+                        return;
                 }
             }
         }

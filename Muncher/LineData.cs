@@ -14,9 +14,4 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
     {
         return $"[#{Line}]({Weight:F2})  <{Source} | {Level}> {Contents}";
     }
-
-    public override int GetHashCode()
-    {
-        return Contents.GetHashCode();
-    }
 }
