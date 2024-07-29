@@ -1,6 +1,8 @@
 /*
 Line munching algo for weighting a Unity log entry
 */
+using System.ComponentModel;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace LogMuncher.Muncher;
@@ -68,15 +70,12 @@ internal class TheLogMuncher()
         string source = string.Empty;
         string contents = string.Empty;
 
-        if (data.Success)
+        //If we match all 4 groups
+        if (data.Success && data.Groups.Count == 4)
         {
-            //Should always be four if we match all groups
-            if (data.Groups.Count == 4)
-            {
-                level = data.Groups[1].Captures[0].Value.Trim();
-                source = data.Groups[2].Captures[0].Value.Trim();
-                contents = data.Groups[3].Captures[0].Value.Trim();
-            }
+            level = data.Groups[1].Captures[0].Value.Trim();
+            source = data.Groups[2].Captures[0].Value.Trim();
+            contents = data.Groups[3].Captures[0].Value.Trim();
         }
 
         if (level == string.Empty || source == string.Empty || contents == string.Empty)
@@ -106,6 +105,8 @@ internal class TheLogMuncher()
                     case CircumstanceType.Multiplicative:
                         value *= item.Value;
                         break;
+                    default:
+                        throw new InvalidEnumArgumentException(nameof(item.Type), (int)item.Type, typeof(CircumstanceType));
                 }
             }
         }
