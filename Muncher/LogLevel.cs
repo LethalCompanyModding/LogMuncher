@@ -16,6 +16,7 @@ internal class LogLevel(string value)
 
     public float GetLogWeight()
     {
+        //skipcq: CS-R1018
         return _value.ToLower() switch
         {
             "message" => 0f,
