@@ -1,7 +1,7 @@
 ﻿using System.Runtime.ExceptionServices;
 using LogMuncher.Muncher;
 
-[assembly: System.Resources.NeutralResourcesLanguageAttribute("en")]
+[assembly: System.Resources.NeutralResourcesLanguage("en")]
 namespace LogMuncher;
 
 internal class Program
