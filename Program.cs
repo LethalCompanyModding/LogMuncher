@@ -1,163 +1,86 @@
-﻿using System.Runtime.ExceptionServices;
+﻿using System.IO;
+using System;
 using LogMuncher.Muncher;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
 namespace LogMuncher;
 
 internal class Program
 {
-
-    static void FirstChanceHandler(object? source, FirstChanceExceptionEventArgs e)
-    {
-
-        if (lastEvent != null && lastEvent == e.Exception)
-        {
-            Console.WriteLine("Skipping a previously handled, unwinding exception");
-            return;
-        }
-
-        lastEvent = e.Exception;
-
-        //Console.WriteLine("FirstChanceException event raised in {0}: {1}",
-        //AppDomain.CurrentDomain.FriendlyName, e.Exception.Message);
-    }
-
-    protected static Exception? lastEvent;
-
-    /*
-    public static void WriteData(object Data)
-    {
-
-        //Write to console
-        if (DoConsole)
-            Console.WriteLine(Data);
-
-        //Write to output file
-        if (DoOutput)
-        {
-            AppendFile ??= new(output, true);
-            AppendFile.AutoFlush = false;
-
-            AppendFile.WriteLine(Data);
-        }
-    }
-    */
-
     /// <summary>
+    /// <para>
     /// LogMuncher written by Robyn
+    /// </para>
     /// </summary>
-    /// <param name="i">File name to read input from</param>
-    /// <param name="o">File name to output to</param>
+    /// <param name="i">File name to read input from, requires -o [output]</param>
+    /// <param name="o">File name to output to, requires -i [input]</param>
     /// <param name="f">Folder name to read in</param>
-    /// <param name="con">Flag to show output to the console too</param>
-    static void Main(string o, bool con, string f, string i = "LogOutput.log")
+    /// <param name="quiet">Suppress most output</param>
+    static void Main(FileInfo i, FileInfo o, DirectoryInfo f, bool quiet)
     {
 
-        //Become exception royalty
-        //This works but its going to be more useful when Muncher becomes a plugin
-        //AppDomain.CurrentDomain.FirstChanceException += FirstChanceHandler;
+        Stopwatch timer = new();
+        timer.Start();
 
-        //Check if output is given
-        if (o is not null)
-        {
-            output = o;
-            DoOutput = true;
-        }
+        List<TheLogMuncher> Munchers = [];
+        Console.WriteLine("Starting up");
 
+        TheLogMuncher.quiet = quiet;
+
+        //Are we in Folder Mode
         if (f is not null)
         {
-            Console.WriteLine("Starting in folder mode");
-            DoOutput = true;
-            string[] files = Directory.GetFiles(f, "*.log");
-
-            foreach (var item in files)
+            if (f.Exists)
             {
-                //create the output file
-                string basedir = Path.Combine(f, "munched");
 
-                if (!Directory.Exists(basedir))
+                DirectoryInfo OutputPath;
+                var dirs = f.GetDirectories("munched");
+
+                //Prepare the output directory
+                if (dirs.Length == 0)
+                    OutputPath = f.CreateSubdirectory("munched");
+                else
+                    OutputPath = dirs[0];
+
+                var inputs = f.GetFiles("*.log");
+
+                foreach (var item in inputs)
                 {
-                    Directory.CreateDirectory(basedir);
+                    var WRITER = new StreamWriter(File.OpenWrite(Path.Combine(OutputPath.FullName, $"{Path.GetFileNameWithoutExtension(item.Name)}.txt")));
+                    Munchers.Add(new(item, WRITER));
                 }
-
-                output = $"{Path.Combine(basedir, Path.GetFileNameWithoutExtension(item))}.txt";
-
-                if (File.Exists(output))
-                    File.Delete(output);
-
-                MunchSingleLog(item);
+            }
+            else
+            {
+                Console.WriteLine($"  The input folder {f.Name} does not exist\n  Full: {f.FullName}");
+                return;
             }
         }
         else
         {
-            Console.WriteLine("Starting in single file mode");
-            MunchSingleLog(i);
-        }
-    }
-
-    public static void MunchSingleLog(string input)
-    {
-        string window = string.Empty;
-
-        TheLogMuncher muncher = new();
-        List<LineData> Lines = [];
-
-        Console.WriteLine($"Munching {input}");
-
-        int lineNo = 1;
-        int addedLines = 0;
-
-        try
-        {
-            using StreamReader sr = new(input);
-            string? line;
-            while ((line = sr.ReadLine()) != null)
+            if (i is null || o is null)
             {
-
-                //Read context until next line
-                while (sr.Peek() != '[' && sr.Peek() != -1)
-                {
-                    line += sr.ReadLine()?.ReplaceLineEndings("");
-                    addedLines++;
-                }
-
-                var (value, data) = muncher.MunchLine(lineNo, line);
-
-                if (value > 1f)
-                {
-                    Lines.Add(data);
-                }
-
-                lineNo++;
-                lineNo += addedLines;
-                addedLines = 0;
+                Console.WriteLine("  Both input and output must be specified in single file mode");
+                return;
             }
+
+            if (!i.Exists)
+            {
+                Console.WriteLine($"  The input file {i.Name} could not be read\n  Full: {i.FullName}");
+                return;
+            }
+
+            Munchers.Add(new(i, new StreamWriter(o.OpenWrite())));
         }
-        catch (Exception e)
+
+        foreach (var item in Munchers)
         {
-            Console.WriteLine("The file could not be read because:");
-            Console.WriteLine($"  {e.GetType()}");
-            Console.WriteLine($"  {e.Message}");
-            return;
+            item.MunchLog();
+            item.Dispose();
         }
 
-        WriteData("----------------------------------------------------------------------------------");
-        WriteData($"Finished Sorting: {input}");
-        WriteData($"Sorted {lineNo} total lines into {Lines.Count} potential issues");
-        WriteData("----------------------------------------------------------------------------------\n");
-
-        Lines.Sort((x, y) => y.Weight.CompareTo(x.Weight));
-
-        foreach (var item in Lines)
-        {
-            WriteData(item);
-        }
-
-        if (DoOutput)
-        {
-            AppendFile?.Flush();
-            AppendFile?.Close();
-            AppendFile = null;
-        }
+        Console.WriteLine($"Task completed in {timer.ElapsedMilliseconds}ms");
     }
 }
