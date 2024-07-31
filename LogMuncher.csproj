@@ -5,7 +5,7 @@
     <TargetFramework>net8</TargetFramework>
     <Nullable>enable</Nullable>
     <langversion>latest</langversion>
-    <Version>2.12.0.2</Version>
+    <Version>3.0.2.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -19,7 +19,8 @@
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.37.0" />
-    <PackageReference Include="System.Commandline.Dragonfruit" Version="0.4.0-alpha.22272.1" ExcludeAssets="true" />
+    <PackageReference Include="System.Commandline.Dragonfruit" Version="0.4.0-alpha.22272.1"
+      ExcludeAssets="true" />
   </ItemGroup>
 
 </Project>
