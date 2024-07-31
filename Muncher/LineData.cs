@@ -16,7 +16,9 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
 
     public override string ToString()
     {
-        StringBuilder builder = new($"  Line Number: {Line}\n  Source: {Source}\n  Severity: {Level}({Weight})\n  Entry:\n    {Contents}\n");
+        StringBuilder builder = new($"- Line Number: #{Line}\n- Source: {Source}\n- Severity: {Level} `{Weight}`");
+
+        builder.AppendLine($"\n\n```\n{Contents}\n```\n\n");
 
         if (violations.Count > 0)
         {
@@ -24,12 +26,12 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
 
             foreach (var item in violations)
             {
-                builder.AppendLine($"    {item.Description} [{item.Type.GetStringDesc(item.Value)}{item.Value}]");
+                builder.AppendLine($"- {item.Description} `{item.Type.GetStringDesc(item.Value)}{item.Value}`");
             }
         }
         else
         {
-            builder.AppendLine("  No specific rules matched");
+            builder.AppendLine("- No specific rules matched");
         }
 
         return builder.ToString();

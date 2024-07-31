@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace LogMuncher.Muncher;
 internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
@@ -76,6 +77,27 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
     public void MunchLog()
     {
         List<LineData> lines = [];
+        StringBuilder buffer = new();
+
+        buffer.AppendLine("""<link rel="stylesheet" href="https://raw.githack.com/hyrious/github-markdown-css/main/dist/dark.css">""");
+        buffer.AppendLine("""
+        <style type="text/css">
+        html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        }
+        .markdown-body {
+        margin: 0 !important;
+        padding: 1em;
+        }
+        .markdown-body pre > code {
+        white-space: pre-wrap;
+        word-break: break-word;
+        }
+        </style>
+        """);
+        buffer.AppendLine("""<div class="markdown-body">""");
+        buffer.AppendLine("");
 
         int lineNo = 1;
         int addedLines = 0;
@@ -114,18 +136,20 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
             throw;
         }
 
-        Output.WriteLine("----------------------------------------------------------------------------------");
-        Output.WriteLine($"Finished Sorting: {FileName}");
-        Output.WriteLine($"Sorted {lineNo} total lines into {lines.Count} potential issues");
-        Output.WriteLine("----------------------------------------------------------------------------------\n");
+        buffer.AppendLine($"# LogMuncher Report for {FileName}");
+        buffer.AppendLine($"Sorted {lineNo} total lines into {lines.Count} potential issues\n");
 
         lines.Sort((x, y) => y.Weight.CompareTo(x.Weight));
 
         foreach (var item in lines)
         {
-            Output.WriteLine(item);
+            buffer.AppendLine("## Issue");
+            buffer.AppendLine(item.ToString());
         }
 
+        buffer.AppendLine("""</div>""");
+
+        Markdig.Markdown.ToHtml(buffer.ToString(), Output);
         Output.Flush();
     }
 

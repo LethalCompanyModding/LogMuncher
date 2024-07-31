@@ -48,7 +48,7 @@ internal class Program
 
                 foreach (var item in inputs)
                 {
-                    var WRITER = new StreamWriter(File.OpenWrite(Path.Combine(OutputPath.FullName, $"{Path.GetFileNameWithoutExtension(item.Name)}.txt")));
+                    var WRITER = new StreamWriter(File.Open(Path.Combine(OutputPath.FullName, $"{Path.GetFileNameWithoutExtension(item.Name)}.html"), FileMode.Create));
                     Munchers.Add(new(item, WRITER));
                 }
             }

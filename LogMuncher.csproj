@@ -18,8 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Commandline.Dragonfruit" Version="0.4.0-alpha.22272.1"
-      ExcludeAssets="true" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
+    <PackageReference Include="System.Commandline.Dragonfruit" Version="0.4.0-alpha.22272.1" ExcludeAssets="true" />
   </ItemGroup>
 
 </Project>
