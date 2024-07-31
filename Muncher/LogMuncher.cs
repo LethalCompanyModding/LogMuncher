@@ -80,7 +80,7 @@ internal class TheLogMuncher()
 
         if (level == string.Empty || source == string.Empty || contents == string.Empty)
         {
-            RepeatLogger.WriteLogLine("Nothing to capture, skipping");
+            Console.WriteLine("Nothing to capture, skipping");
             return (0f, def);
         }
 
@@ -121,7 +121,7 @@ internal class TheLogMuncher()
 
         if (AllErrorHashes.Contains(tempHash))
         {
-            RepeatLogger.WriteLogLine("Skipping a repeat line");
+            Console.WriteLine("Skipping a repeat line");
             return (0f, def);
         }
 
