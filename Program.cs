@@ -60,9 +60,9 @@ internal class Program
         }
         else
         {
-            if (i is null || o is null)
+            if (i is null)
             {
-                Console.WriteLine("  Both input and output must be specified in single file mode");
+                Console.WriteLine("  Input file not specified");
                 return;
             }
 
@@ -72,7 +72,15 @@ internal class Program
                 return;
             }
 
-            Munchers.Add(new(i, new StreamWriter(o.OpenWrite())));
+            o ??= new($"{Path.GetFileNameWithoutExtension(i.FullName)}.html");
+
+            if (Path.GetExtension(o.Name) != ".html")
+            {
+                o = new($"{Path.GetFileNameWithoutExtension(o.FullName)}.html");
+                Console.WriteLine("Changing filename to end in HTML, thank me later");
+            }
+
+            Munchers.Add(new(i, new StreamWriter(o.Open(FileMode.Create))));
         }
 
         foreach (var item in Munchers)
