@@ -24,6 +24,7 @@ internal class Program
 
     protected static Exception? lastEvent;
 
+    /*
     public static void WriteData(object Data)
     {
 
@@ -40,6 +41,7 @@ internal class Program
             AppendFile.WriteLine(Data);
         }
     }
+    */
 
     /// <summary>
     /// LogMuncher written by Robyn
@@ -54,9 +56,6 @@ internal class Program
         //Become exception royalty
         //This works but its going to be more useful when Muncher becomes a plugin
         //AppDomain.CurrentDomain.FirstChanceException += FirstChanceHandler;
-
-        //check if we are writing to the console
-        DoConsole = con;
 
         //Check if output is given
         if (o is not null)
