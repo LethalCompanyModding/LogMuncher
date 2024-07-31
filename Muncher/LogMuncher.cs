@@ -4,7 +4,6 @@ Line munching algo for weighting a Unity log entry
 
 using System;
 using System.IO;
-using System.ComponentModel;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -16,45 +15,48 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
     protected String FileName = Input.Name;
     protected TextWriter Output = Output;
     private int LastInHash = 0;
-
     public static bool quiet = false;
 
     //FAKE
-    protected static readonly LineData def = new(-1, "", "", "", 0f);
+    protected static readonly LineData def = new(-1, "", "", "");
 
     //For repeat log snipping
     protected readonly List<int> AllErrorHashes = [];
 
-    protected static readonly List<WeightModifier> Modifiers =
+    protected static readonly List<Violation> Modifiers =
     [
         //Additive Modifiers first
-
-        //Matches all properly named exceptions
-        new(
-            new("""[\s\w]*Exception""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            15f
-        ),
-
-        //Matches if bepin skips a plugin because its being loaded multiple times
-        new(
-            new("""skipping.*version exists""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            5f
-        ),
 
         //Do not care about BepinEx wrong version warnings
         new(
             new("""bepinex \(.+\) and might not work""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
             CircumstanceType.Additive,
-            -15f
+            -15f,
+            "[LCM1000] This warning is completely safe to ignore"
+        ),
+
+        //Matches all properly named exceptions
+        new(
+            new("""[\s\w]*Exception""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
+            CircumstanceType.Additive,
+            15f,
+            "[LCM2000] Expression contains an Exception"
         ),
 
         //Elevate logs that talk about null refs without mentioning an exception
         new(
             new("""Object reference not set.*object""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
             CircumstanceType.Additive,
-            4f
+            4f,
+            "[LCM2001] Expression contains a null reference"
+        ),
+
+        //Matches if bepin skips a plugin because its being loaded multiple times
+        new(
+            new("""skipping.*version exists""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
+            CircumstanceType.Additive,
+            5f,
+            "[LCM2002] BepinEx is skipping a plugin because it already loaded it once"
         ),
 
         //Elevate logs that fail to open files due to sharing violations
@@ -62,7 +64,8 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
         new(
             new("""sharing violation""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
             CircumstanceType.Additive,
-            5f
+            5f,
+            "[LCM2003] A file failed to load"
         ),
     ];
 
@@ -90,9 +93,9 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
                     addedLines++;
                 }
 
-                var (value, data) = MunchLine(lineNo, line);
+                var data = MunchLine(lineNo, line);
 
-                if (value > 1f)
+                if (data.Weight > 1f)
                 {
                     lines.Add(data);
                 }
@@ -126,10 +129,9 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
         Output.Flush();
     }
 
-    internal (float value, LineData data) MunchLine(int LineNo, string Contents)
+    internal LineData MunchLine(int LineNo, string Contents)
     {
         //Break the line into pieces
-        float value = 0;
         Match data = LineBreaker.Match(Contents);
         LogLevel level = string.Empty;
         string source = string.Empty;
@@ -143,15 +145,13 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
             contents = data.Groups[3].Captures[0].Value.Trim();
         }
 
+        LineData line = new(LineNo, level, source, contents);
+
         if (level == string.Empty || source == string.Empty || contents == string.Empty)
         {
             WriteLine("Nothing to capture, skipping");
-            return (0f, def);
+            return def;
         }
-
-        //Get the base value of this log
-        value = level.GetLogWeight();
-        bool modsRun = false;
 
         //Run all circumstance modifiers
         foreach (var item in Modifiers)
@@ -160,26 +160,8 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
 
             if (Matches.Success)
             {
-                modsRun = true;
-
-                switch (item.Type)
-                {
-                    case CircumstanceType.Additive:
-                        value += item.Value;
-                        break;
-                    case CircumstanceType.Multiplicative:
-                        value *= item.Value;
-                        break;
-                    default:
-                        throw new InvalidEnumArgumentException(nameof(item.Type), (int)item.Type, typeof(CircumstanceType));
-                }
+                line.violations.Add(item);
             }
-        }
-
-        if (!modsRun)
-        {
-            //No mods were run at all for this line so its boring
-            value -= 3f;
         }
 
         var tempHash = contents.GetHashCode();
@@ -187,12 +169,12 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
         if (AllErrorHashes.Contains(tempHash))
         {
             WriteLine("Skipping a repeat line");
-            return (0f, def);
+            return def;
         }
 
         AllErrorHashes.Add(tempHash);
 
-        return (value, new(LineNo, level, source, contents, value));
+        return line;
     }
 
     protected void WriteLine(object Message)
