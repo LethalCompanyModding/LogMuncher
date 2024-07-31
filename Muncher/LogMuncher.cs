@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
+using Markdig;
 
 namespace LogMuncher.Muncher;
 internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
@@ -24,7 +25,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
     //For repeat log snipping
     protected readonly List<int> AllErrorHashes = [];
 
-    protected static readonly List<Violation> Modifiers =
+    protected static readonly Violation[] Modifiers =
     [
         //Additive Modifiers first
 
@@ -149,7 +150,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
 
         buffer.AppendLine("""</div>""");
 
-        Markdig.Markdown.ToHtml(buffer.ToString(), Output);
+        Markdown.ToHtml(buffer.ToString(), Output);
         Output.Flush();
     }
 
