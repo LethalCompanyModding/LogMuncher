@@ -1,3 +1,4 @@
+/*
 namespace LogMuncher;
 
 internal static class RepeatLogger
@@ -28,3 +29,4 @@ internal static class RepeatLogger
         Console.WriteLine(Message);
     }
 }
+*/

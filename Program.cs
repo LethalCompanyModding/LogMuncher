@@ -12,29 +12,24 @@ internal class Program
 
         if (lastEvent != null && lastEvent == e.Exception)
         {
-            RepeatLogger.WriteLogLine("Skipping a previously handled, unwinding exception");
+            Console.WriteLine("Skipping a previously handled, unwinding exception");
             return;
         }
 
         lastEvent = e.Exception;
 
-        //RepeatLogger.WriteLogLine("FirstChanceException event raised in {0}: {1}",
+        //Console.WriteLine("FirstChanceException event raised in {0}: {1}",
         //AppDomain.CurrentDomain.FriendlyName, e.Exception.Message);
     }
 
     protected static Exception? lastEvent;
-
-    protected static string output = "";
-    protected static bool DoOutput = false;
-    protected static StreamWriter? AppendFile;
-    protected static bool DoConsole = false;
 
     public static void WriteData(object Data)
     {
 
         //Write to console
         if (DoConsole)
-            RepeatLogger.WriteLogLine(Data);
+            Console.WriteLine(Data);
 
         //Write to output file
         if (DoOutput)
@@ -72,7 +67,7 @@ internal class Program
 
         if (f is not null)
         {
-            RepeatLogger.WriteLogLine("Starting in folder mode");
+            Console.WriteLine("Starting in folder mode");
             DoOutput = true;
             string[] files = Directory.GetFiles(f, "*.log");
 
@@ -96,7 +91,7 @@ internal class Program
         }
         else
         {
-            RepeatLogger.WriteLogLine("Starting in single file mode");
+            Console.WriteLine("Starting in single file mode");
             MunchSingleLog(i);
         }
     }
@@ -108,7 +103,7 @@ internal class Program
         TheLogMuncher muncher = new();
         List<LineData> Lines = [];
 
-        RepeatLogger.WriteLogLine($"Munching {input}");
+        Console.WriteLine($"Munching {input}");
 
         int lineNo = 1;
         int addedLines = 0;
@@ -141,9 +136,9 @@ internal class Program
         }
         catch (Exception e)
         {
-            RepeatLogger.WriteLogLine("The file could not be read because:");
-            RepeatLogger.WriteLogLine($"  {e.GetType()}");
-            RepeatLogger.WriteLogLine($"  {e.Message}");
+            Console.WriteLine("The file could not be read because:");
+            Console.WriteLine($"  {e.GetType()}");
+            Console.WriteLine($"  {e.Message}");
             return;
         }
 
