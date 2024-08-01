@@ -1,0 +1,3 @@
+[submodule "src/dev.mamallama.checkrunnerlib"]
+	path = src/dev.mamallama.checkrunnerlib
+	url = git@github.com:RobynLlama/dev.mamallama.checkrunnerlib.git
