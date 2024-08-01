@@ -25,6 +25,15 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
     //For repeat log snipping
     protected readonly List<int> AllErrorHashes = [];
 
+    //Todo List:
+    //Split this list into its own file
+    //Source: HarmonyX
+    //Add LCMXXXX code in as its own variable to Violation
+    //Output links to read more about a violation when printing
+    //assetbundleSystem.IO.FileNotFoundException
+    //Could not find * call in
+    //failed IL hook
+
     protected static readonly Violation[] Modifiers =
     [
         //Additive Modifiers first
