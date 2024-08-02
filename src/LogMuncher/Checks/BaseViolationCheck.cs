@@ -15,14 +15,6 @@ internal abstract class BaseViolationCheck(string Target, Violation MyViolation)
     public sealed override void RunChecks()
     {
         var Matches = MyViolation.Regex.Match(Target);
-
-        if (Matches.Success)
-        {
-            State = ViolationLevel;
-        }
-        else
-        {
-            State = CheckStatus.Succeeded;
-        }
+        State = Matches.Success ? ViolationLevel : CheckStatus.Succeeded;
     }
 }
