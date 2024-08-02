@@ -14,9 +14,3 @@ internal class SharingViolationCheck(string Target) : BaseViolationCheck(Target,
     public override string CheckID => "Sharing Violation";
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }
-
-
-
-/*
-
-*/

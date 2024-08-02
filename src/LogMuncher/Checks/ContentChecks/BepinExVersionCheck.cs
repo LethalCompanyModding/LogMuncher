@@ -14,9 +14,3 @@ internal class BepinExVersionCheck(string Target) : BaseViolationCheck(Target, S
     public override string CheckID => "BepinEx Version";
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }
-
-
-
-/*
-
-*/

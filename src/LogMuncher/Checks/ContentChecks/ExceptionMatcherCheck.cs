@@ -14,9 +14,3 @@ internal class ExceptionMatcherCheck(string Target) : BaseViolationCheck(Target,
     public override string CheckID => "Exception Matcher";
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }
-
-
-
-/*
-
-*/
