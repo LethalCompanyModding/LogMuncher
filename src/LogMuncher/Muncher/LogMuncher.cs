@@ -8,68 +8,33 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
 using Markdig;
+using LogMuncher.CheckRunners;
+using LogMuncher.Checks;
+using dev.mamallama.checkrunnerlib.Checks;
 
 namespace LogMuncher.Muncher;
 internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
 {
 
     protected TextReader Input = new StreamReader(Input.OpenRead());
-    protected String FileName = Input.Name;
+    protected string FileName = Input.Name;
     protected TextWriter Output = Output;
     private int LastInHash = 0;
     public static bool quiet = false;
 
     //FAKE
-    protected static readonly LineData def = new(-1, "", "", "");
+    protected static readonly LineData def = new(-1, "", "", "", null!);
 
     //For repeat log snipping
     protected readonly List<int> AllErrorHashes = [];
 
-    protected static readonly Violation[] Modifiers =
-    [
-        //Additive Modifiers first
-
-        //Do not care about BepinEx wrong version warnings
-        new(
-            new("""bepinex \(.+\) and might not work""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            -15f,
-            "[LCM1000] This warning is completely safe to ignore"
-        ),
-
-        //Matches all properly named exceptions
-        new(
-            new("""[\s\w]*Exception""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            15f,
-            "[LCM2000] Expression contains an Exception"
-        ),
-
-        //Elevate logs that talk about null refs without mentioning an exception
-        new(
-            new("""Object reference not set.*object""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            4f,
-            "[LCM2001] Expression contains a null reference"
-        ),
-
-        //Matches if bepin skips a plugin because its being loaded multiple times
-        new(
-            new("""skipping.*version exists""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            5f,
-            "[LCM2002] BepinEx is skipping a plugin because it already loaded it once"
-        ),
-
-        //Elevate logs that fail to open files due to sharing violations
-        //TODO: maybe make this match on more general failed to open file statements
-        new(
-            new("""sharing violation""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-            CircumstanceType.Additive,
-            5f,
-            "[LCM2003] A file failed to load"
-        ),
-    ];
+    //Todo List:
+    //Split this list into its own file
+    //Source: HarmonyX
+    //Output links to read more about a violation when printing
+    //assetbundleSystem.IO.FileNotFoundException
+    //Could not find * call in
+    //failed IL hook
 
     protected static readonly Regex LineBreaker = new("""\[(debug|info|warning|message|fatal|error)\s*:([\s\w]+)\](.*)""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1));
 
@@ -170,23 +135,10 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
             contents = data.Groups[3].Captures[0].Value.Trim();
         }
 
-        LineData line = new(LineNo, level, source, contents);
-
         if (level == string.Empty || source == string.Empty || contents == string.Empty)
         {
             WriteLine("Nothing to capture, skipping");
             return def;
-        }
-
-        //Run all circumstance modifiers
-        foreach (var item in Modifiers)
-        {
-            var Matches = item.Regex.Match(contents);
-
-            if (Matches.Success)
-            {
-                line.violations.Add(item);
-            }
         }
 
         var tempHash = contents.GetHashCode();
@@ -199,7 +151,11 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
 
         AllErrorHashes.Add(tempHash);
 
-        return line;
+        //Run all checks for the line
+        var Runner = new AllChecksRunner(source, contents, level);
+        Runner.RunChecks();
+
+        return new(LineNo, level, source, contents, Runner);
     }
 
     protected void WriteLine(object Message)

@@ -392,3 +392,4 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp
 snippets/*
+test-logs/*

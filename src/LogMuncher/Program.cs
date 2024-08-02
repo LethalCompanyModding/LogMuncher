@@ -3,6 +3,7 @@ using System;
 using LogMuncher.Muncher;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LogMuncher.RuleDatabase;
 
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
 namespace LogMuncher;
@@ -29,20 +30,19 @@ internal class Program
 
         TheLogMuncher.quiet = quiet;
 
+        Rules.Init();
+
         //Are we in Folder Mode
         if (f is not null)
         {
             if (f.Exists)
             {
 
-                DirectoryInfo OutputPath;
                 var dirs = f.GetDirectories("munched");
 
                 //Prepare the output directory
-                if (dirs.Length == 0)
-                    OutputPath = f.CreateSubdirectory("munched");
-                else
-                    OutputPath = dirs[0];
+                DirectoryInfo OutputPath = dirs.Length == 0
+                ? f.CreateSubdirectory("munched") : dirs[0];
 
                 var inputs = f.GetFiles("*.log");
 
