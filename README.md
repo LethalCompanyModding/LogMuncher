@@ -1,5 +1,7 @@
 # LogMuncher
+
 Munches Bepinex logs and sorts them by perceived severity
 
-## Features
-Pretty much just that. Use --help or -h to spit out command line switches, etc.
+## Usage
+
+See the [Documentation](https://lethalcompanymodding.github.io/Thunderstore/www/Tools/Log-Muncher.html#usage-and-arguments)
