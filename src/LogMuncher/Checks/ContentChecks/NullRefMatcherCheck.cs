@@ -8,7 +8,7 @@ internal class NullRefMatcherCheck(string Target) : BaseViolationCheck(Target, S
 {
     private readonly static Violation SpecificViolation = new(
         new("""Object reference not set.*object""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-        2001
+        2000
     );
 
     public override string CheckID => "NullRef Matcher";
