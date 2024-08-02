@@ -10,7 +10,5 @@ internal class BepinExMultipleLoadsCheck(string Target) : BaseViolationCheck(Tar
         new("""skipping.*version exists""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
         2001
     );
-
-    public override string CheckID => "BepinEx Multiple Loads";
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }

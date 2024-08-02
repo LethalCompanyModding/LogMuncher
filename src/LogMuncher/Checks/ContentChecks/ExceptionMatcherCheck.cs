@@ -10,7 +10,5 @@ internal class ExceptionMatcherCheck(string Target) : BaseViolationCheck(Target,
         new("""[\s\w]*Exception""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
         4000
     );
-
-    public override string CheckID => "Exception Matcher";
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }

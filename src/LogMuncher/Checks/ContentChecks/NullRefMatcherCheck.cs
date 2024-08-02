@@ -10,7 +10,5 @@ internal class NullRefMatcherCheck(string Target) : BaseViolationCheck(Target, S
         new("""Object reference not set.*object""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
         2000
     );
-
-    public override string CheckID => "NullRef Matcher";
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }
