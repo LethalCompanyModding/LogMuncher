@@ -77,7 +77,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
                 //Read context until next line
                 while (Input.Peek() != '[' && Input.Peek() != -1)
                 {
-                    line += Input.ReadLine()?.ReplaceLineEndings("");
+                    line += Input.ReadLine();//?.ReplaceLineEndings("");
                     addedLines++;
                 }
 
