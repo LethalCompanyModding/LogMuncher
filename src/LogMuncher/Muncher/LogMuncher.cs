@@ -17,7 +17,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
 {
 
     protected TextReader Input = new StreamReader(Input.OpenRead());
-    protected String FileName = Input.Name;
+    protected string FileName = Input.Name;
     protected TextWriter Output = Output;
     private int LastInHash = 0;
     public static bool quiet = false;
