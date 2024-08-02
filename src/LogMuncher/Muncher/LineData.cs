@@ -4,8 +4,6 @@ using dev.mamallama.checkrunnerlib.Checks;
 using LogMuncher.RuleDatabase;
 using LogMuncher.CheckRunners;
 using dev.mamallama.checkrunnerlib.CheckRunners;
-using System.Net;
-using System;
 
 namespace LogMuncher.Muncher;
 
@@ -102,11 +100,21 @@ internal static class TraverseLineData
                 //cache the rule
                 var rule = Rules.GetRuleById(check.MyViolation.ErrorCode);
 
+                const string MatcherAddress = "https://lethalcompanymodding.github.io/Thunderstore/www/Tools/Log-Muncher.html#lcm-";
 
-                //Output Violation Name
-                sb.Append("- [LCM");
-                sb.Append(check.MyViolation.ErrorCode);
+                //Output Violation Name and link
+                sb.Append("- ");
+                sb.Append("""<a href= '""");
+                sb.Append(MatcherAddress);
+                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
+                sb.Append("' >");
+
+                sb.Append("[LCM");
+                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
                 sb.Append("] ");
+                sb.Append("""</a>""");
+
+                //Violation description
                 sb.Append(rule.Description);
                 sb.Append(" `");
                 sb.Append(rule.Type.GetStringDesc(rule.Value));

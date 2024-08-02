@@ -11,6 +11,7 @@ internal abstract class BaseViolationCheck(string Target, Violation MyViolation)
     public readonly Violation MyViolation = MyViolation;
     protected abstract CheckStatus ViolationLevel { get; }
     public override ICheckRunner[] MyChecks => [];
+    public override string CheckID => "Violation Check";
 
     public sealed override void RunChecks()
     {

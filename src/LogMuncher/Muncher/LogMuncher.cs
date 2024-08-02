@@ -9,8 +9,6 @@ using System.Text.RegularExpressions;
 using System.Text;
 using Markdig;
 using LogMuncher.CheckRunners;
-using LogMuncher.Checks;
-using dev.mamallama.checkrunnerlib.Checks;
 
 namespace LogMuncher.Muncher;
 internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
@@ -27,14 +25,6 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
 
     //For repeat log snipping
     protected readonly List<int> AllErrorHashes = [];
-
-    //Todo List:
-    //Split this list into its own file
-    //Source: HarmonyX
-    //Output links to read more about a violation when printing
-    //assetbundleSystem.IO.FileNotFoundException
-    //Could not find * call in
-    //failed IL hook
 
     protected static readonly Regex LineBreaker = new("""\[(debug|info|warning|message|fatal|error)\s*:([\s\w]+)\](.*)""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1));
 
@@ -77,7 +67,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
                 //Read context until next line
                 while (Input.Peek() != '[' && Input.Peek() != -1)
                 {
-                    line += Input.ReadLine()?.ReplaceLineEndings("");
+                    line += Input.ReadLine();//?.ReplaceLineEndings("");
                     addedLines++;
                 }
 
