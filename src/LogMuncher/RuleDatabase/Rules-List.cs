@@ -27,7 +27,7 @@ internal static partial class Rules
         );
 
         RuleList.Add(2002,
-            new(5f, Muncher.CircumstanceType.Additive, "A file failed to load")
+            new(5f, Muncher.CircumstanceType.Additive, "A file failed to load due to a sharing violation")
         );
 
         //Serious errors 3000s
