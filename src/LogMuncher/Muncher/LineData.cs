@@ -4,8 +4,6 @@ using dev.mamallama.checkrunnerlib.Checks;
 using LogMuncher.RuleDatabase;
 using LogMuncher.CheckRunners;
 using dev.mamallama.checkrunnerlib.CheckRunners;
-using System.Net;
-using System;
 
 namespace LogMuncher.Muncher;
 
@@ -105,7 +103,7 @@ internal static class TraverseLineData
 
                 //Output Violation Name
                 sb.Append("- [LCM");
-                sb.Append(check.MyViolation.ErrorCode);
+                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
                 sb.Append("] ");
                 sb.Append(rule.Description);
                 sb.Append(" `");
