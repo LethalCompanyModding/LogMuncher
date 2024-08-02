@@ -12,7 +12,7 @@ internal static class CircumstanceType_Ext
     {
         return self switch
         {
-            CircumstanceType.Additive => Value < 0 ? "-" : "+",
+            CircumstanceType.Additive => Value < 0 ? "" : "+",
             CircumstanceType.Multiplicative => "*",
             _ => throw new System.Exception("Unreachable"),
         };

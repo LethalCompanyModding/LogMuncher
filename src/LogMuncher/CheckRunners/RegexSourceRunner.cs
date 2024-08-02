@@ -1,14 +1,14 @@
 using LogMuncher.Checks;
-using dev.mamallama.checkrunnerlib.Checks;
+using dev.mamallama.checkrunnerlib.CheckRunners;
 
 namespace LogMuncher.CheckRunners;
 
 internal class RegexSourceRunner(string Target) : BaseRegexCheckRunner(Target)
 {
-    public override string CheckGroupID => "Source Matcher";
+    public override string CheckID => "Source Matcher";
 
-    protected override ICheck[] MyChecks => checks;
-    private readonly ICheck[] checks = [
+    public override ICheckRunner[] MyChecks => checks;
+    private readonly ICheckRunner[] checks = [
 
     ];
 }

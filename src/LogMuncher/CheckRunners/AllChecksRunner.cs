@@ -1,4 +1,3 @@
-using dev.mamallama.checkrunnerlib.Checks;
 using dev.mamallama.checkrunnerlib.CheckRunners;
 using LogMuncher.Checks;
 
@@ -6,12 +5,13 @@ namespace LogMuncher.CheckRunners;
 
 internal class AllChecksRunner(string Source, string Content, string Level) : BaseCheckRunner
 {
-    public override string CheckGroupID => "LCM Problem Matcher";
+    public override string CheckID => "LCM Problem Matcher";
 
-    protected override ICheck[] MyChecks => checks;
-    private readonly ICheck[] checks = [
+    public override ICheckRunner[] MyChecks => checks;
+    private readonly ICheckRunner[] checks = [
             //new RegexSourceRunner(Source),
             new RegexContentRunner(Content),
             //new RegexLevelRunner(Level),
         ];
+
 }

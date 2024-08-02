@@ -152,9 +152,10 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
         AllErrorHashes.Add(tempHash);
 
         //Run all checks for the line
-        CheckValidation Matchers = new AllChecksRunner(source, contents, level).RunCheck();
+        var Runner = new AllChecksRunner(source, contents, level);
+        Runner.RunChecks();
 
-        return new(LineNo, level, source, contents, Matchers);
+        return new(LineNo, level, source, contents, Runner);
     }
 
     protected void WriteLine(object Message)

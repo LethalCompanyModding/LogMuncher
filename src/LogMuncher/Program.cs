@@ -3,6 +3,7 @@ using System;
 using LogMuncher.Muncher;
 using System.Collections.Generic;
 using System.Diagnostics;
+using LogMuncher.RuleDatabase;
 
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
 namespace LogMuncher;
@@ -28,6 +29,8 @@ internal class Program
         Console.WriteLine("Starting up");
 
         TheLogMuncher.quiet = quiet;
+
+        Rules.Init();
 
         //Are we in Folder Mode
         if (f is not null)

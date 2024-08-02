@@ -1,25 +1,28 @@
 using LogMuncher.Muncher;
 using System.Text.RegularExpressions;
 using dev.mamallama.checkrunnerlib.Checks;
+using dev.mamallama.checkrunnerlib.CheckRunners;
 
 namespace LogMuncher.Checks;
 
-internal abstract class BaseViolationCheck(string Target, Violation MyViolation) : BaseCheck
+internal abstract class BaseViolationCheck(string Target, Violation MyViolation) : BaseCheckRunner
 {
     protected string Target = Target;
     public readonly Violation MyViolation = MyViolation;
     protected abstract CheckStatus ViolationLevel { get; }
+    public override ICheckRunner[] MyChecks => [];
 
-    public sealed override LineValidation RunCheck()
+    public sealed override void RunChecks()
     {
         var Matches = MyViolation.Regex.Match(Target);
 
         if (Matches.Success)
         {
-            return new LineValidation(CheckID, ViolationLevel, "", MyViolation.ErrorCode);
+            State = ViolationLevel;
         }
-
-        //Don't return a because if we match since it will be skipped
-        return new LineValidation(CheckID, CheckStatus.Succeeded, "", MyViolation.ErrorCode);
+        else
+        {
+            State = CheckStatus.Succeeded;
+        }
     }
 }
