@@ -4,10 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace LogMuncher.Muncher;
 
-internal class Violation(Regex Regex, CircumstanceType Type, float Value, string Description)
+internal readonly struct Violation(Regex Regex, int ErrorCode)
 {
     public readonly Regex Regex = Regex;
-    public readonly CircumstanceType Type = Type;
-    public readonly string Description = Description;
-    public readonly float Value = Value;
+    public readonly int ErrorCode = ErrorCode;
 }

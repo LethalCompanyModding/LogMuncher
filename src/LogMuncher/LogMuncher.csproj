@@ -23,4 +23,8 @@
       ExcludeAssets="true" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../dev.mamallama.checkrunnerlib/dev.mamallama.checkrunnerlib.csproj" />
+  </ItemGroup>
+
 </Project>
