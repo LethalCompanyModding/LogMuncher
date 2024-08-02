@@ -38,14 +38,11 @@ internal class Program
             if (f.Exists)
             {
 
-                DirectoryInfo OutputPath;
                 var dirs = f.GetDirectories("munched");
 
                 //Prepare the output directory
-                if (dirs.Length == 0)
-                    OutputPath = f.CreateSubdirectory("munched");
-                else
-                    OutputPath = dirs[0];
+                DirectoryInfo OutputPath = dirs.Length == 0
+                ? f.CreateSubdirectory("munched") : dirs[0];
 
                 var inputs = f.GetFiles("*.log");
 
