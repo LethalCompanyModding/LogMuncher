@@ -8,7 +8,7 @@ internal class BepinExVersionCheck(string Target) : BaseViolationCheck(Target, S
 {
     private readonly static Violation SpecificViolation = new(
         new("""bepinex \(.+\) and might not work""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-        0000
+        00000
     );
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }

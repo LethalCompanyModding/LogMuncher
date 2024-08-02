@@ -100,7 +100,7 @@ internal static class TraverseLineData
                 //cache the rule
                 var rule = Rules.GetRuleById(check.MyViolation.ErrorCode);
 
-                const string MatcherAddress = "https://lethalcompanymodding.github.io/Thunderstore/Tools/Log-Muncher.html#lcm-";
+                const string MatcherAddress = "https://lethalcompanymodding.github.io/Thunderstore/www/Tools/Log-Muncher.html#lcm-";
 
                 //Output Violation Name and link
                 sb.Append("- ");

@@ -12,6 +12,7 @@ internal class RegexContentRunner(string Target) : BaseRegexCheckRunner(Target)
             new BepinExVersionCheck(Target),
             new ExceptionMatcherCheck(Target),
             new NullRefMatcherCheck(Target),
+            new PlayerRagdollCheck(Target),
             new SharingViolationCheck(Target),
         ];
 }

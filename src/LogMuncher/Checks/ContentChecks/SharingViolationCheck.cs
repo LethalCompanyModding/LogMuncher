@@ -8,7 +8,7 @@ internal class SharingViolationCheck(string Target) : BaseViolationCheck(Target,
 {
     private readonly static Violation SpecificViolation = new(
         new("""sharing violation""", RegexOptions.IgnoreCase | RegexOptions.Compiled, new(0, 0, 1)),
-        2002
+        20002
     );
     protected override CheckStatus ViolationLevel => CheckStatus.Warning;
 }

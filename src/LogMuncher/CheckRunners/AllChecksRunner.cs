@@ -9,9 +9,8 @@ internal class AllChecksRunner(string Source, string Content, string Level) : Ba
 
     public override ICheckRunner[] MyChecks => checks;
     private readonly ICheckRunner[] checks = [
-            //new RegexSourceRunner(Source),
+            new RegexSourceRunner(Source),
             new RegexContentRunner(Content),
-            //new RegexLevelRunner(Level),
         ];
 
 }
