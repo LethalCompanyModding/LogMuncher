@@ -3,7 +3,7 @@ using LogMuncher.Checks;
 
 namespace LogMuncher.CheckRunners;
 
-internal class AllChecksRunner(string Source, string Content, string Level) : BaseCheckRunner
+internal class AllChecksRunner(string Source, string Content) : BaseCheckRunner
 {
     public override string CheckID => "LCM Problem Matcher";
 
