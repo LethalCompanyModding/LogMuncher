@@ -9,14 +9,16 @@ using System.Text.RegularExpressions;
 using System.Text;
 using Markdig;
 using LogMuncher.CheckRunners;
+using System.Linq;
 
 namespace LogMuncher.Muncher;
-internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
+internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources) : IDisposable
 {
 
     protected TextReader Input = new StreamReader(Input.OpenRead());
     protected string FileName = Input.Name;
     protected TextWriter Output = Output;
+    protected string[] sources = sources;
     private int LastInHash = 0;
     public static bool quiet = false;
 
@@ -123,6 +125,12 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output) : IDisposable
             level = data.Groups[1].Captures[0].Value.Trim();
             source = data.Groups[2].Captures[0].Value.Trim();
             contents = data.Groups[3].Captures[0].Value.Trim();
+        }
+
+        if (sources.Length > 0 && !sources.Contains(source))
+        {
+            WriteLine("Skipping source not in source list");
+            return def;
         }
 
         if (level == string.Empty || source == string.Empty || contents == string.Empty)

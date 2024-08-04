@@ -19,8 +19,11 @@ internal class Program
     /// <param name="o">File name to output to, requires -i [input]</param>
     /// <param name="f">Folder name to read in</param>
     /// <param name="quiet">Suppress most output</param>
-    static void Main(FileInfo i, FileInfo o, DirectoryInfo f, bool quiet)
+    /// <param name="source">(Optional) All logs not from this source are discarded. Can be provided multiple times</param>
+    static void Main(FileInfo i, FileInfo o, DirectoryInfo f, bool quiet, string[] source)
     {
+
+        source ??= [];
 
         Stopwatch timer = new();
         timer.Start();
@@ -49,7 +52,7 @@ internal class Program
                 foreach (var item in inputs)
                 {
                     var WRITER = new StreamWriter(File.Open(Path.Combine(OutputPath.FullName, $"{Path.GetFileNameWithoutExtension(item.Name)}.html"), FileMode.Create));
-                    Munchers.Add(new(item, WRITER));
+                    Munchers.Add(new(item, WRITER, source));
                 }
             }
             else
@@ -80,7 +83,7 @@ internal class Program
                 Console.WriteLine("Changing filename to end in HTML, thank me later");
             }
 
-            Munchers.Add(new(i, new StreamWriter(o.Open(FileMode.Create))));
+            Munchers.Add(new(i, new StreamWriter(o.Open(FileMode.Create)), source));
         }
 
         foreach (var item in Munchers)
