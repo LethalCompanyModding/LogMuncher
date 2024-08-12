@@ -34,7 +34,7 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
     public override string ToString()
     {
 
-        StringBuilder builder = new("- Line Number: $");
+        StringBuilder builder = new("- Line Number: #");
         builder.AppendLine(Line.ToString());
         builder.Append("- Source: ");
         builder.AppendLine(Source);
