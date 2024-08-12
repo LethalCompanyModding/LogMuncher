@@ -4,6 +4,7 @@ using dev.mamallama.checkrunnerlib.Checks;
 using LogMuncher.RuleDatabase;
 using LogMuncher.CheckRunners;
 using dev.mamallama.checkrunnerlib.CheckRunners;
+using System;
 
 namespace LogMuncher.Muncher;
 
@@ -29,12 +30,11 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
     }
     private float _weight = -100f;
     public readonly AllChecksRunner Runner = Runner;
-    public const float BoringPenalty = 3f;
 
     public override string ToString()
     {
 
-        StringBuilder builder = new("- Line Number: $");
+        StringBuilder builder = new("- Line Number: #");
         builder.AppendLine(Line.ToString());
         builder.Append("- Source: ");
         builder.AppendLine(Source);
@@ -68,9 +68,15 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
 
     protected virtual float GetWeight()
     {
-        float value = Level.GetLogWeight();
+        float addons = Runner.TraverseAndCount();
+        float value = Level.GetLogWeight() + addons;
 
-        return value + Runner.TraverseAndCount();
+        if (addons == 0f)
+        {
+            value -= LogLevel.BoringPenalty;
+        }
+
+        return value;
     }
 }
 
