@@ -3,14 +3,6 @@
 	"tasks": [
 		{
 			"type": "dotnet",
-			"task": "build /home/qtmims/Documents/Lethal Company Modding/LogMuncher/src/LogMuncher/LogMuncher.csproj",
-			"file": "/home/qtmims/Documents/Lethal Company Modding/LogMuncher/src/LogMuncher/LogMuncher.csproj",
-			"group": "build",
-			"problemMatcher": [],
-			"label": "dotnet: build /home/qtmims/Documents/Lethal Company Modding/LogMuncher/src/LogMuncher/LogMuncher.csproj"
-		},
-		{
-			"type": "dotnet",
 			"task": "build",
 			"group": "build",
 			"problemMatcher": [],
