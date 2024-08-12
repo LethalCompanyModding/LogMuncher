@@ -4,7 +4,6 @@ using dev.mamallama.checkrunnerlib.Checks;
 using LogMuncher.RuleDatabase;
 using LogMuncher.CheckRunners;
 using dev.mamallama.checkrunnerlib.CheckRunners;
-using System;
 
 namespace LogMuncher.Muncher;
 
