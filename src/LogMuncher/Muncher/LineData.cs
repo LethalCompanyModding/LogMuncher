@@ -29,7 +29,6 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
     }
     private float _weight = -100f;
     public readonly AllChecksRunner Runner = Runner;
-    public const float BoringPenalty = 3f;
 
     public override string ToString()
     {
