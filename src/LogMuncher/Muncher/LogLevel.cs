@@ -3,6 +3,7 @@ namespace LogMuncher.Muncher;
 internal class LogLevel(string value)
 {
     readonly string _value = value;
+    public const float BoringPenalty = 5f;
 
     public static implicit operator string(LogLevel @in)
     {
@@ -20,10 +21,10 @@ internal class LogLevel(string value)
         {
             "message" => 0f,
             "info" => 0f,
-            "debug" => 1f,
+            "debug" => 0f,
             "warning" => 5f,
             "error" => 10f,
-            "fatal" => 15f,
+            "fatal" => 20f,
             _ => 0f,
         };
     }
