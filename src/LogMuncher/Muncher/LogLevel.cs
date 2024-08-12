@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace LogMuncher.Muncher;
 
 internal class LogLevel(string value)
