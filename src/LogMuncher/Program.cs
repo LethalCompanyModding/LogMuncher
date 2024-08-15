@@ -29,7 +29,6 @@ internal class Program
         Stopwatch timer = new();
         timer.Start();
 
-        List<TheLogMuncher> Munchers = [];
         Console.WriteLine("Starting up");
 
         TheLogMuncher.quiet = quiet;
@@ -56,7 +55,7 @@ internal class Program
                 foreach (var item in inputs)
                 {
                     var WRITER = new StreamWriter(File.Open(Path.Combine(OutputPath.FullName, $"{Path.GetFileNameWithoutExtension(item.Name)}.html"), FileMode.Create));
-                    Munchers.Add(new(item, WRITER, source));
+                    tasks.Add(new TheLogMuncher(item, WRITER, source).MunchLog());
                 }
             }
             else
@@ -87,13 +86,7 @@ internal class Program
                 Console.WriteLine("Changing filename to end in HTML, thank me later");
             }
 
-            Munchers.Add(new(i, new StreamWriter(o.Open(FileMode.Create)), source));
-        }
-
-        foreach (var item in Munchers)
-        {
-            tasks.Add(item.MunchLog());
-            //item.Dispose();
+            tasks.Add(new TheLogMuncher(i, new StreamWriter(o.Open(FileMode.Create)), source).MunchLog());
         }
 
         await Task.WhenAll(tasks);
