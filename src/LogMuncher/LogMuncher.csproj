@@ -5,7 +5,7 @@
     <TargetFramework>net8</TargetFramework>
     <Nullable>enable</Nullable>
     <langversion>latest</langversion>
-    <Version>3.1.0.1</Version>
+    <Version>3.2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
