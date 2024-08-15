@@ -4,6 +4,7 @@ using LogMuncher.Muncher;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LogMuncher.RuleDatabase;
+using System.Threading.Tasks;
 
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
 namespace LogMuncher;
@@ -20,7 +21,7 @@ internal class Program
     /// <param name="f">Folder name to read in</param>
     /// <param name="quiet">Suppress most output</param>
     /// <param name="source">(Optional) All logs not from this source are discarded. Can be provided multiple times</param>
-    static void Main(FileInfo i, FileInfo o, DirectoryInfo f, bool quiet, string[] source)
+    static async Task Main(FileInfo i, FileInfo o, DirectoryInfo f, bool quiet, string[] source)
     {
 
         source ??= [];
@@ -34,6 +35,9 @@ internal class Program
         TheLogMuncher.quiet = quiet;
 
         Rules.Init();
+
+        //Create task list
+        List<Task> tasks = [];
 
         //Are we in Folder Mode
         if (f is not null)
@@ -88,9 +92,11 @@ internal class Program
 
         foreach (var item in Munchers)
         {
-            item.MunchLog();
-            item.Dispose();
+            tasks.Add(item.MunchLog());
+            //item.Dispose();
         }
+
+        await Task.WhenAll(tasks);
 
         Console.WriteLine($"Task completed in {timer.ElapsedMilliseconds}ms");
     }

@@ -10,6 +10,7 @@ using System.Text;
 using Markdig;
 using LogMuncher.CheckRunners;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LogMuncher.Muncher;
 internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources) : IDisposable
@@ -32,10 +33,12 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
 
     protected const float DefaultLogWeight = 0.1f;
 
-    public void MunchLog()
+    public async Task MunchLog()
     {
         List<LineData> lines = [];
         StringBuilder buffer = new();
+
+        await Task.Delay(1);
 
         buffer.AppendLine("""<link rel="stylesheet" href="https://raw.githack.com/hyrious/github-markdown-css/main/dist/dark.css">""");
         buffer.AppendLine("""
@@ -63,6 +66,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
         try
         {
             string? line;
+
             while ((line = Input.ReadLine()) != null)
             {
 
@@ -113,6 +117,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
 
     internal LineData MunchLine(int LineNo, string Contents)
     {
+
         //Break the line into pieces
         Match data = LineBreaker.Match(Contents);
         LogLevel level = string.Empty;
@@ -135,7 +140,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
 
         if (level == string.Empty || source == string.Empty || contents == string.Empty)
         {
-            WriteLine("Nothing to capture, skipping");
+            //WriteLine("Nothing to capture, skipping");
             return def;
         }
 
@@ -143,7 +148,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
 
         if (AllErrorHashes.Contains(tempHash))
         {
-            WriteLine("Skipping a repeat line");
+            //WriteLine("Skipping a repeat line");
             return def;
         }
 
