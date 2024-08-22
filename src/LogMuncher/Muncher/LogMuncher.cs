@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace LogMuncher.Muncher;
 internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources) : IDisposable
 {
-
+    public const char RETURN_CHAR = '\u2028';
     protected TextReader Input = new StreamReader(Input.OpenRead());
     protected string FileName = Input.Name;
     protected TextWriter Output = Output;
@@ -73,7 +73,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
                 //Read context until next line
                 while (Input.Peek() != '[' && Input.Peek() != -1)
                 {
-                    line += Input.ReadLine();//?.ReplaceLineEndings("");
+                    line += RETURN_CHAR + Input.ReadLine();
                     addedLines++;
                 }
 
