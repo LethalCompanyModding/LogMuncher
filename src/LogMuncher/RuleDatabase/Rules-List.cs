@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace LogMuncher.RuleDatabase;
 
 internal static partial class Rules

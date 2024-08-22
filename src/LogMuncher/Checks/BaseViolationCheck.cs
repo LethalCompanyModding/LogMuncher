@@ -1,5 +1,4 @@
 using LogMuncher.Muncher;
-using System.Text.RegularExpressions;
 using dev.mamallama.checkrunnerlib.Checks;
 using dev.mamallama.checkrunnerlib.CheckRunners;
 

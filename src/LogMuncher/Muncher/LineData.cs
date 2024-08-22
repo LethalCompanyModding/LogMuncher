@@ -4,7 +4,6 @@ using dev.mamallama.checkrunnerlib.Checks;
 using LogMuncher.RuleDatabase;
 using LogMuncher.CheckRunners;
 using dev.mamallama.checkrunnerlib.CheckRunners;
-using System;
 
 namespace LogMuncher.Muncher;
 
@@ -46,7 +45,7 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
         builder.AppendLine();
 
         //remove interpolation
-        builder.AppendLine($"\n\n```\n{Contents}\n```\n\n");
+        builder.AppendLine($"\n\n```\n{Contents.Replace(TheLogMuncher.RETURN_CHAR, '\n')}\n```\n\n");
 
         StringBuilder matcher = new();
 

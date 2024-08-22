@@ -1,4 +1,3 @@
-using LogMuncher.Checks;
 using dev.mamallama.checkrunnerlib.CheckRunners;
 
 namespace LogMuncher.CheckRunners;

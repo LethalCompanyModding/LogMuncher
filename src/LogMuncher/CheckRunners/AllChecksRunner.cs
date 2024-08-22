@@ -1,5 +1,4 @@
 using dev.mamallama.checkrunnerlib.CheckRunners;
-using LogMuncher.Checks;
 
 namespace LogMuncher.CheckRunners;
 
