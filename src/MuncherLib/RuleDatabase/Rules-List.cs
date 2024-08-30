@@ -1,6 +1,6 @@
-namespace LogMuncher.RuleDatabase;
+namespace MuncherLib.RuleDatabase;
 
-internal static partial class Rules
+public static partial class Rules
 {
     public static void Init()
     {

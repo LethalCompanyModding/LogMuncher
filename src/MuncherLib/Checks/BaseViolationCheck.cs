@@ -1,8 +1,8 @@
-using LogMuncher.Muncher;
+using MuncherLib.Muncher;
 using dev.mamallama.checkrunnerlib.Checks;
 using dev.mamallama.checkrunnerlib.CheckRunners;
 
-namespace LogMuncher.Checks;
+namespace MuncherLib.Checks;
 
 internal abstract class BaseViolationCheck(string Target, Violation MyViolation) : BaseCheckRunner
 {

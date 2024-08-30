@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace LogMuncher.Muncher;
+namespace MuncherLib.Muncher;
 
 internal readonly struct Violation(Regex Regex, int ErrorCode)
 {

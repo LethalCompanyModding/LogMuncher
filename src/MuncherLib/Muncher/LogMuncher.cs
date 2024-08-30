@@ -8,20 +8,20 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
 using Markdig;
-using LogMuncher.CheckRunners;
+using MuncherLib.CheckRunners;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LogMuncher.Muncher;
-internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources) : IDisposable
+namespace MuncherLib.Muncher;
+public class LogMuncher(StreamReader Input, StreamWriter Output, string[] sources = null!, bool Quiet = true, bool HTMLOutput = true) : IDisposable
 {
     public const char RETURN_CHAR = '\u2028';
-    protected TextReader Input = new StreamReader(Input.OpenRead());
-    protected string FileName = Input.Name;
+    protected TextReader Input = Input;
     protected TextWriter Output = Output;
-    protected string[] sources = sources;
+    protected string[] sources = sources ?? [];
     private int LastInHash = 0;
-    public static bool quiet = false;
+    public bool Quiet = Quiet;
+    public bool HTMLOutput = HTMLOutput;
 
     //FAKE
     protected static readonly LineData def = new(-1, "", "", "", null!);
@@ -33,15 +33,16 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
 
     protected const float DefaultLogWeight = 0.1f;
 
-    public async Task MunchLog()
+    public async Task<List<LineData>> MunchLog(bool raw = false)
     {
         List<LineData> lines = [];
         StringBuilder buffer = new();
 
-        await Task.Delay(1);
+        if (HTMLOutput)
+        {
 
-        buffer.AppendLine("""<link rel="stylesheet" href="https://raw.githack.com/hyrious/github-markdown-css/main/dist/dark.css">""");
-        buffer.AppendLine("""
+            buffer.AppendLine("""<link rel="stylesheet" href="https://raw.githack.com/hyrious/github-markdown-css/main/dist/dark.css">""");
+            buffer.AppendLine("""
         <style type="text/css">
         html, body {
         margin: 0 !important;
@@ -57,8 +58,9 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
         }
         </style>
         """);
-        buffer.AppendLine("""<div class="markdown-body">""");
-        buffer.AppendLine("");
+            buffer.AppendLine("""<div class="markdown-body">""");
+            buffer.AppendLine("");
+        }
 
         int lineNo = 1;
         int addedLines = 0;
@@ -98,10 +100,13 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
             throw;
         }
 
-        buffer.AppendLine($"# LogMuncher Report for {FileName}");
+        buffer.AppendLine("# LogMuncher Report");
         buffer.AppendLine($"Sorted {lineNo} total lines into {lines.Count} potential issues\n");
 
         lines.Sort((x, y) => y.Weight.CompareTo(x.Weight));
+
+        if (raw)
+            return lines;
 
         foreach (var item in lines)
         {
@@ -109,10 +114,16 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
             buffer.AppendLine(item.ToString());
         }
 
-        buffer.AppendLine("""</div>""");
+        if (HTMLOutput)
+        {
+            buffer.AppendLine("""</div>""");
+            Markdown.ToHtml(buffer.ToString(), Output);
+        }
+        else
+            Output.Write(buffer.ToString());
 
-        Markdown.ToHtml(buffer.ToString(), Output);
         Output.Flush();
+        return null!;
     }
 
     internal LineData MunchLine(int LineNo, string Contents)
@@ -165,7 +176,7 @@ internal class TheLogMuncher(FileInfo Input, TextWriter Output, string[] sources
     {
 
         //SHUT THE HELL UP
-        if (quiet)
+        if (Quiet)
             return;
 
         //Check if this is a repeat message

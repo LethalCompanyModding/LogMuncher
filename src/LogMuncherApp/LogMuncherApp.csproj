@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../dev.mamallama.checkrunnerlib/dev.mamallama.checkrunnerlib.csproj" />
+    <ProjectReference Include="../MuncherLib/MuncherLib.csproj" />
   </ItemGroup>
 
 </Project>

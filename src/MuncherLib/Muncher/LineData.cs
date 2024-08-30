@@ -1,13 +1,13 @@
 using System.Text;
-using LogMuncher.Checks;
+using MuncherLib.Checks;
 using dev.mamallama.checkrunnerlib.Checks;
-using LogMuncher.RuleDatabase;
-using LogMuncher.CheckRunners;
+using MuncherLib.RuleDatabase;
+using MuncherLib.CheckRunners;
 using dev.mamallama.checkrunnerlib.CheckRunners;
 
-namespace LogMuncher.Muncher;
+namespace MuncherLib.Muncher;
 
-internal class LineData(int Line, LogLevel Level, string Source, string Contents, AllChecksRunner Runner)
+public class LineData(int Line, LogLevel Level, string Source, string Contents, AllChecksRunner Runner)
 {
     public readonly int Line = Line;
     public readonly LogLevel Level = Level;
@@ -45,7 +45,7 @@ internal class LineData(int Line, LogLevel Level, string Source, string Contents
         builder.AppendLine();
 
         //remove interpolation
-        builder.AppendLine($"\n\n```\n{Contents.Replace(TheLogMuncher.RETURN_CHAR, '\n')}\n```\n\n");
+        builder.AppendLine($"\n\n```\n{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}\n```\n\n");
 
         StringBuilder matcher = new();
 
@@ -109,15 +109,15 @@ internal static class TraverseLineData
 
                 //Output Violation Name and link
                 sb.Append("- ");
-                sb.Append("""<a href= '""");
+
+                sb.Append("[[LCM");
+                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
+                sb.Append("]]");
+
+                sb.Append('(');
                 sb.Append(MatcherAddress);
                 sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
-                sb.Append("' >");
-
-                sb.Append("[LCM");
-                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
-                sb.Append("] ");
-                sb.Append("""</a>""");
+                sb.Append(')');
 
                 //Violation description
                 sb.Append(rule.Description);

@@ -1,7 +1,7 @@
 using dev.mamallama.checkrunnerlib.CheckRunners;
-using LogMuncher.Checks.ContentChecks;
+using MuncherLib.Checks.ContentChecks;
 
-namespace LogMuncher.CheckRunners;
+namespace MuncherLib.CheckRunners;
 
 internal class RegexSourceRunner(string Target) : BaseRegexCheckRunner(Target)
 {

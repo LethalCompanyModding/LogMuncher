@@ -1,8 +1,8 @@
 using dev.mamallama.checkrunnerlib.CheckRunners;
 
-namespace LogMuncher.CheckRunners;
+namespace MuncherLib.CheckRunners;
 
-internal class AllChecksRunner(string Source, string Content) : BaseCheckRunner
+public class AllChecksRunner(string Source, string Content) : BaseCheckRunner
 {
     public override string CheckID => "LCM Problem Matcher";
 

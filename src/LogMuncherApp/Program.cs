@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System;
-using LogMuncher.Muncher;
+using MuncherLib.Muncher;
 using System.Collections.Generic;
 using System.Diagnostics;
-using LogMuncher.RuleDatabase;
+using MuncherLib.RuleDatabase;
 using System.Threading.Tasks;
 
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
-namespace LogMuncher;
+namespace LogMuncherApp;
 
 internal class Program
 {
@@ -17,21 +17,18 @@ internal class Program
     /// </para>
     /// </summary>
     /// <param name="i">File name to read input from, requires -o [output]</param>
-    /// <param name="o">File name to output to, requires -i [input]</param>
     /// <param name="f">Folder name to read in</param>
     /// <param name="quiet">Suppress most output</param>
-    /// <param name="source">(Optional) All logs not from this source are discarded. Can be provided multiple times</param>
-    static async Task Main(FileInfo i, FileInfo o, DirectoryInfo f, bool quiet, string[] source)
+    /// <param name="sources">(Optional) All logs not from this source are discarded. Can be provided multiple times</param>
+    static async Task Main(FileInfo i, DirectoryInfo f, bool quiet, string[] sources)
     {
 
-        source ??= [];
+        sources ??= [];
 
         Stopwatch timer = new();
         timer.Start();
 
         Console.WriteLine("Starting up");
-
-        TheLogMuncher.quiet = quiet;
 
         Rules.Init();
 
@@ -54,8 +51,7 @@ internal class Program
 
                 foreach (var item in inputs)
                 {
-                    var WRITER = new StreamWriter(File.Open(Path.Combine(OutputPath.FullName, $"{Path.GetFileNameWithoutExtension(item.Name)}.html"), FileMode.Create));
-                    tasks.Add(new TheLogMuncher(item, WRITER, source).MunchLog());
+                    tasks.Add(MunchIndividualLogAsync(item, sources, quiet));
                 }
             }
             else
@@ -78,19 +74,30 @@ internal class Program
                 return;
             }
 
-            o ??= new($"{Path.GetFileNameWithoutExtension(i.FullName)}.html");
-
-            if (Path.GetExtension(o.Name) != ".html")
-            {
-                o = new($"{Path.GetFileNameWithoutExtension(o.FullName)}.html");
-                Console.WriteLine("Changing filename to end in HTML, thank me later");
-            }
-
-            tasks.Add(new TheLogMuncher(i, new StreamWriter(o.Open(FileMode.Create)), source).MunchLog());
+            tasks.Add(MunchIndividualLogAsync(i, sources, quiet));
         }
 
         await Task.WhenAll(tasks);
 
         Console.WriteLine($"Task completed in {timer.ElapsedMilliseconds}ms");
+    }
+
+    static async Task MunchIndividualLogAsync(FileInfo item, string[] sources, bool Quiet)
+    {
+
+        var directory = Path.GetDirectoryName(item.FullName);
+        var filename = Path.GetFileNameWithoutExtension(item.FullName);
+
+        if (!item.Exists || directory is null)
+        {
+            Console.WriteLine($"Skipping file: {item.Name}, unable to read");
+            return;
+        }
+
+        var InputReader = new StreamReader(item.OpenRead());
+
+        var OutputWriter = new StreamWriter(File.Open(Path.Combine(directory, filename + ".html"), FileMode.Create));
+        using var muncher = new LogMuncher(InputReader, OutputWriter, sources, Quiet, HTMLOutput: false);
+        await muncher.MunchLog();
     }
 }
