@@ -38,14 +38,13 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
         builder.Append("- Source: ");
         builder.AppendLine(Source);
         builder.Append("- Severity: ");
-        builder.AppendLine(Level);
+        builder.Append(Level);
         builder.Append('`');
         builder.Append(Weight);
         builder.Append('`');
-        builder.AppendLine();
 
         //remove interpolation
-        builder.AppendLine($"\n\n```\n{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}\n```\n\n");
+        builder.AppendLine($"\n```{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}```");
 
         StringBuilder matcher = new();
 
