@@ -12,7 +12,6 @@
     <OutputPath>./bin/</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SatelliteResourceLanguages>en-US;en</SatelliteResourceLanguages>
-    <PublishSingleFile>true</PublishSingleFile>
     <PublishSelfContained>false</PublishSelfContained>
     <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
   </PropertyGroup>

@@ -45,7 +45,7 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
         builder.AppendLine();
 
         //remove interpolation
-        builder.AppendLine($"\n\n```\n{Contents.Replace(TheLogMuncher.RETURN_CHAR, '\n')}\n```\n\n");
+        builder.AppendLine($"\n\n```\n{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}\n```\n\n");
 
         StringBuilder matcher = new();
 
@@ -109,15 +109,15 @@ internal static class TraverseLineData
 
                 //Output Violation Name and link
                 sb.Append("- ");
-                sb.Append("""<a href= '""");
+
+                sb.Append("[[LCM");
+                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
+                sb.Append("]]");
+
+                sb.Append('(');
                 sb.Append(MatcherAddress);
                 sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
-                sb.Append("' >");
-
-                sb.Append("[LCM");
-                sb.Append(check.MyViolation.ErrorCode.ToString("D4"));
-                sb.Append("] ");
-                sb.Append("""</a>""");
+                sb.Append(')');
 
                 //Violation description
                 sb.Append(rule.Description);
