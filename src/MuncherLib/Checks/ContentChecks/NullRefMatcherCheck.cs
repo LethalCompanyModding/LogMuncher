@@ -1,8 +1,8 @@
 using dev.mamallama.checkrunnerlib.Checks;
 using System.Text.RegularExpressions;
-using LogMuncher.Muncher;
+using MuncherLib.Muncher;
 
-namespace LogMuncher.Checks.ContentChecks;
+namespace MuncherLib.Checks.ContentChecks;
 
 internal class NullRefMatcherCheck(string Target) : BaseViolationCheck(Target, SpecificViolation)
 {

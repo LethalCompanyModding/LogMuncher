@@ -1,6 +1,6 @@
-namespace LogMuncher.Muncher;
+namespace MuncherLib.Muncher;
 
-internal enum CircumstanceType
+public enum CircumstanceType
 {
     Additive,
     Multiplicative,

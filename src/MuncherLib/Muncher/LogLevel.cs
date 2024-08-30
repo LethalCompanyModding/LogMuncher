@@ -1,6 +1,6 @@
-namespace LogMuncher.Muncher;
+namespace MuncherLib.Muncher;
 
-internal class LogLevel(string value)
+public class LogLevel(string value)
 {
     readonly string _value = value;
     public const float BoringPenalty = 5f;

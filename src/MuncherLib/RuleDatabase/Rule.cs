@@ -1,7 +1,7 @@
-using LogMuncher.Muncher;
+using MuncherLib.Muncher;
 
-namespace LogMuncher.RuleDatabase;
-internal readonly struct Rule(float Value, CircumstanceType Type, string Description)
+namespace MuncherLib.RuleDatabase;
+public readonly struct Rule(float Value, CircumstanceType Type, string Description)
 {
     public readonly float Value = Value;
     public readonly CircumstanceType Type = Type;

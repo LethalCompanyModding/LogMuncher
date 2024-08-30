@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>library</OutputType>
+    <TargetFramework>net8</TargetFramework>
+    <Nullable>enable</Nullable>
+    <langversion>latest</langversion>
+    <Version>3.2.1.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath>./bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SatelliteResourceLanguages>en-US;en</SatelliteResourceLanguages>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishSelfContained>false</PublishSelfContained>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.37.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../dev.mamallama.checkrunnerlib/dev.mamallama.checkrunnerlib.csproj" />
+  </ItemGroup>
+
+</Project>

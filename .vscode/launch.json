@@ -12,7 +12,7 @@
                 "task": "build",
                 "type": "dotnet"
             },
-            "program": "${workspaceFolder}/src/LogMuncher/bin/LogMuncher.dll",
+            "program": "${workspaceFolder}/src/LogMuncherApp/bin/LogMuncherApp.dll",
             "args": [
                 "-f",
                 "${workspaceFolder}/test-logs"

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace LogMuncher.RuleDatabase;
+namespace MuncherLib.RuleDatabase;
 
-internal static partial class Rules
+public static partial class Rules
 {
-    public static readonly Dictionary<int, Rule> RuleList = [];
+    internal static readonly Dictionary<int, Rule> RuleList = [];
 
     public static Rule GetRuleById(int ID)
     {
