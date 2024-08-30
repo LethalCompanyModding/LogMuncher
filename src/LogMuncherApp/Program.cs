@@ -51,7 +51,7 @@ internal class Program
 
                 foreach (var item in inputs)
                 {
-                    tasks.Add(MunchIndividualLog(item, sources, quiet));
+                    tasks.Add(MunchIndividualLogAsync(item, sources, quiet));
                 }
             }
             else
@@ -74,7 +74,7 @@ internal class Program
                 return;
             }
 
-            tasks.Add(MunchIndividualLog(i, sources, quiet));
+            tasks.Add(MunchIndividualLogAsync(i, sources, quiet));
         }
 
         await Task.WhenAll(tasks);
@@ -82,7 +82,7 @@ internal class Program
         Console.WriteLine($"Task completed in {timer.ElapsedMilliseconds}ms");
     }
 
-    static async Task MunchIndividualLog(FileInfo item, string[] sources, bool Quiet)
+    static async Task MunchIndividualLogAsync(FileInfo item, string[] sources, bool Quiet)
     {
 
         var directory = Path.GetDirectoryName(item.FullName);
