@@ -43,7 +43,7 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
         builder.Append('`');
 
         //remove interpolation
-        if (limit > 0)
+        if (limit > 0 && Contents.Length >= limit)
             builder.AppendLine($"\n```{Contents[..limit].Replace(LogMuncher.RETURN_CHAR, '\n')}```");
         else
             builder.AppendLine($"\n```{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}```");
