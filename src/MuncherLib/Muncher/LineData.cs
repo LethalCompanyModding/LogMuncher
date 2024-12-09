@@ -30,9 +30,8 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
     private float _weight = -100f;
     public readonly AllChecksRunner Runner = Runner;
 
-    public override string ToString()
+    public string ToStringLimited(int limit)
     {
-
         StringBuilder builder = new("- Line Number: #");
         builder.AppendLine(Line.ToString());
         builder.Append("- Source: ");
@@ -44,7 +43,10 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
         builder.Append('`');
 
         //remove interpolation
-        builder.AppendLine($"\n```{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}```");
+        if (limit > 0)
+            builder.AppendLine($"\n```{Contents[..limit].Replace(LogMuncher.RETURN_CHAR, '\n')}```");
+        else
+            builder.AppendLine($"\n```{Contents.Replace(LogMuncher.RETURN_CHAR, '\n')}```");
 
         StringBuilder matcher = new();
 
@@ -64,6 +66,8 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
         return builder.ToString();
     }
 
+    public override string ToString() => ToStringLimited(-1);
+
     protected virtual float GetWeight()
     {
         float addons = Runner.TraverseAndCount();
@@ -78,9 +82,9 @@ public class LineData(int Line, LogLevel Level, string Source, string Contents, 
     }
 }
 
-internal static class TraverseLineData
+public static class TraverseLineData
 {
-    internal static void TraverseAndPrint(this ICheckRunner head, StringBuilder sb)
+    public static void TraverseAndPrint(this ICheckRunner head, StringBuilder sb)
     {
 
         //branch
@@ -128,7 +132,7 @@ internal static class TraverseLineData
         }
     }
 
-    internal static float TraverseAndCount(this ICheckRunner head)
+    public static float TraverseAndCount(this ICheckRunner head)
     {
 
         if (head is null)
