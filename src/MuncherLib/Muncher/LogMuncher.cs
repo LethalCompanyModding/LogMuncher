@@ -3,16 +3,17 @@ Line munching algo for weighting a Unity log entry
 */
 
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Markdig;
 using MuncherLib.CheckRunners;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MuncherLib.Muncher;
+
 public class LogMuncher(StreamReader Input, StreamWriter Output, string[] sources = null!, bool Quiet = true, bool HTMLOutput = true) : IDisposable
 {
     public const char RETURN_CHAR = '\u2028';
@@ -33,7 +34,7 @@ public class LogMuncher(StreamReader Input, StreamWriter Output, string[] source
 
     protected const float DefaultLogWeight = 0.1f;
 
-    public async Task<List<LineData>> MunchLog(bool raw = false)
+    public Task<List<LineData>> MunchLog(bool raw = false)
     {
         List<LineData> lines = [];
         StringBuilder buffer = new();
@@ -106,7 +107,7 @@ public class LogMuncher(StreamReader Input, StreamWriter Output, string[] source
         lines.Sort((x, y) => y.Weight.CompareTo(x.Weight));
 
         if (raw)
-            return lines;
+            return Task.FromResult(lines);
 
         foreach (var item in lines)
         {
@@ -123,7 +124,7 @@ public class LogMuncher(StreamReader Input, StreamWriter Output, string[] source
             Output.Write(buffer.ToString());
 
         Output.Flush();
-        return null!;
+        return Task.FromResult<List<LineData>>([]);
     }
 
     internal LineData MunchLine(int LineNo, string Contents)
