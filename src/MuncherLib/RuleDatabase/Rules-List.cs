@@ -16,6 +16,11 @@ public static partial class Rules
         );
 
         //Slight Issues 1000s
+        RuleList.Add(10000,
+            new(0f, Muncher.CircumstanceType.Additive, "Expression originates from HarmonyX, this may indicate a failed type resolution")
+        );
+
+        //Serious errors 3000s
 
         //Moderate Errors 2000s
 
@@ -30,11 +35,6 @@ public static partial class Rules
 
         RuleList.Add(20002,
             new(5f, Muncher.CircumstanceType.Additive, "A file failed to load due to a sharing violation")
-        );
-
-        //Serious errors 3000s
-        RuleList.Add(35000,
-            new(10f, Muncher.CircumstanceType.Additive, "Expression originates from HarmonyX, this is usually a bad sign")
         );
 
         //Critical errors 4000s
