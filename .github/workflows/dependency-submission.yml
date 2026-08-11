@@ -1,0 +1,29 @@
+name: Dependency Submission
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Submit NuGet dependencies
+        uses: advanced-security/component-detection-dependency-submission-action@v0.1.4
+        with:
+          detectorsCategories: NuGet
