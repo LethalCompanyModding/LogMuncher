@@ -42,5 +42,10 @@ public static partial class Rules
         RuleList.Add(40000,
             new(15f, Muncher.CircumstanceType.Additive, "Expression contains an Exception")
         );
+
+        //A mod's AssetBundle was refused by Unity, so everything it ships is missing
+        RuleList.Add(40001,
+            new(15f, Muncher.CircumstanceType.Additive, "Unity could not load an AssetBundle because another bundle with the same files is already loaded")
+        );
     }
 }

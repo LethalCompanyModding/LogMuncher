@@ -8,6 +8,7 @@ internal class RegexContentRunner(string Target) : BaseRegexCheckRunner(Target)
     public override string CheckID => "Content Matcher";
     public override ICheckRunner[] MyChecks => checks;
     private readonly ICheckRunner[] checks = [
+            new AssetBundleLoadFailureCheck(Target),
             new BepinExMultipleLoadsCheck(Target),
             new BepinExVersionCheck(Target),
             new ExceptionMatcherCheck(Target),
